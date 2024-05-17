@@ -1,5 +1,8 @@
+using Entities.Models.Auth;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Repository.Repositories.ManagerDal;
+using Repository.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +24,11 @@ builder.Services.AddAuthorization(options =>
         .RequireAuthenticatedUser()
         .Build();
 });
+
+
+builder.Services.AddScoped<IGenericRepository<Manager>, ManagerRepository>();
+builder.Services.AddScoped<IManagerRepository, ManagerRepository>();
+
 
 var app = builder.Build();
 

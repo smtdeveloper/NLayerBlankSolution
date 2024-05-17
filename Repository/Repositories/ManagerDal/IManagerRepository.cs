@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Repository.Repositories.ManagerDal
 {
-    public interface IManagerRepository
+    public interface IManagerRepository : IGenericRepository<Manager>
     {
         Task<Response<Manager>> GetByUsernameAsync(string username, string passwordHash);
     }
