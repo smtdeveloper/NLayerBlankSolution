@@ -31,61 +31,8 @@ public class ProductController : Controller
         return View(product);
     }
 
-    public IActionResult Create()
-    {
-        return View();
-    }
 
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(Product product)
-    {
-        if (ModelState.IsValid)
-        {
-            await _productService.CreateAsync(product);
-            return RedirectToAction(nameof(Index));
-        }
-        return View(product);
-    }
-
-    public async Task<IActionResult> Edit(int id)
-    {
-        var product = await _productService.GetByIdAsync(id);
-        if (product == null)
-        {
-            return NotFound();
-        }
-       
-        return View(product);
-    }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(Product product)
-    {
-        if (product.Id != null)
-        {
-            return NotFound();
-        }
-
-        if (ModelState.IsValid)
-        {
-            
-            return RedirectToAction(nameof(Index));
-        }
-        return View(product);
-    }
-
-    public async Task<IActionResult> Delete(int id)
-    {
-        var product = await _productService.GetByIdAsync(id);
-        if (product == null)
-        {
-            return NotFound();
-        }
-        return View(product);
-    }
-
+ 
    
    
 }

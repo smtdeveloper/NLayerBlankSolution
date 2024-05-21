@@ -21,9 +21,10 @@ public class ManagerService : GenericService<Manager>, IManagerService
         _managerRepository = managerRepository;
     }
 
-    async Task<Response<Manager>> IManagerService.GetByUsernameAsync(string username, string passwordHash)
+    async Task<Response<Manager>> IManagerService.GetByUserAsync(string username, string password)
     {
-        var manager =  await _managerRepository.GetByUsernameAsync(username, passwordHash);
+
+        var manager =  await _managerRepository.GetByUsernameAsync(username, password);
         return manager;
 
     }

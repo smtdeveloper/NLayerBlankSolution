@@ -11,6 +11,6 @@ namespace Service.Services.ManagerService
 {
     public interface IManagerService : IGenericService<Manager>
     {
-        Task<Response<Manager>> GetByUsernameAsync(string username, string passwordHash);
+        Task<Response<Manager>> GetByUserAsync(string username, string password);
     }
 }

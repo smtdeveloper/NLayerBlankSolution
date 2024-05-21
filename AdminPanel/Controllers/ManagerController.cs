@@ -3,21 +3,20 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Services;
 
-namespace Web.Controllers;
-
+namespace AdminPanel.Controllers;
 [Authorize(Roles = "Admin, Manager")]
-public class RoleController : Controller
+public class ManagerController : Controller
 {
-    private readonly IGenericService<Role> _roleService;
+    private readonly IGenericService<Manager> _managerService;
 
-    public RoleController(IGenericService<Role> roleService)
+    public ManagerController(IGenericService<Manager> managerService)
     {
-        _roleService = roleService;
+        _managerService = managerService;
     }
 
     public async Task<IActionResult> Index()
     {
-        var response = await _roleService.GetAllAsync();
+        var response = await _managerService.GetAllAsync();
         if (response.Success)
             return View(response.Data);
         else
@@ -31,17 +30,17 @@ public class RoleController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(Role role)
+    public async Task<IActionResult> Create(Manager manager)
     {
         if (ModelState.IsValid)
         {
-            var response = await _roleService.CreateAsync(role);
+            var response = await _managerService.CreateAsync(manager);
             if (response.Success)
                 return RedirectToAction(nameof(Index));
             else
                 ModelState.AddModelError(string.Empty, response.Message);
         }
-        return View(role);
+        return View(manager);
     }
 
     public async Task<IActionResult> Edit(int? id)
@@ -49,7 +48,7 @@ public class RoleController : Controller
         if (id == null)
             return NotFound();
 
-        var response = await _roleService.GetByIdAsync(id.Value);
+        var response = await _managerService.GetByIdAsync(id.Value);
         if (response.Success)
             return View(response.Data);
         else
@@ -58,20 +57,20 @@ public class RoleController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, Role role)
+    public async Task<IActionResult> Edit(int id, Manager manager)
     {
-        if (id != role.Id)
+        if (id != manager.Id)
             return NotFound();
 
         if (ModelState.IsValid)
         {
-            var response = await _roleService.UpdateAsync(role);
+            var response = await _managerService.UpdateAsync(manager);
             if (response.Success)
                 return RedirectToAction(nameof(Index));
             else
                 ModelState.AddModelError(string.Empty, response.Message);
         }
-        return View(role);
+        return View(manager);
     }
 
     public async Task<IActionResult> Details(int? id)
@@ -79,7 +78,7 @@ public class RoleController : Controller
         if (id == null)
             return NotFound();
 
-        var response = await _roleService.GetByIdAsync(id.Value);
+        var response = await _managerService.GetByIdAsync(id.Value);
         if (response.Success)
             return View(response.Data);
         else
@@ -91,7 +90,7 @@ public class RoleController : Controller
         if (id == null)
             return NotFound();
 
-        var response = await _roleService.GetByIdAsync(id.Value);
+        var response = await _managerService.GetByIdAsync(id.Value);
         if (response.Success)
             return View(response.Data);
         else
@@ -102,10 +101,10 @@ public class RoleController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        var response = await _roleService.GetByIdAsync(id);
+        var response = await _managerService.GetByIdAsync(id);
         if (response.Success)
         {
-            var deleteResponse = await _roleService.DeleteAsync(response.Data);
+            var deleteResponse = await _managerService.DeleteAsync(response.Data);
             if (deleteResponse.Success)
                 return RedirectToAction(nameof(Index));
             else

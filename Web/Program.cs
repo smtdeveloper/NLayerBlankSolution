@@ -1,33 +1,17 @@
-using Entities.Models.Auth;
+﻿using Entities.Models.Auth;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Repository.Repositories.ManagerDal;
 using Repository.Repositories;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Service.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
-// Add authentication
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.LoginPath = "/Account/Login";
-        options.AccessDeniedPath = "/Account/AccessDenied";
-    });
-
-// Add authorization
-builder.Services.AddAuthorization(options =>
-{
-    options.FallbackPolicy = new AuthorizationPolicyBuilder()
-        .RequireAuthenticatedUser()
-        .Build();
-});
-
-
-builder.Services.AddScoped<IGenericRepository<Manager>, ManagerRepository>();
-builder.Services.AddScoped<IManagerRepository, ManagerRepository>();
 
 
 var app = builder.Build();
@@ -44,9 +28,6 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
-// Add authentication middleware
-app.UseAuthentication();
 
 // Add authorization middleware
 app.UseAuthorization();

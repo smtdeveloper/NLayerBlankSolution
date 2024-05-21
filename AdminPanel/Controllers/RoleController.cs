@@ -3,21 +3,21 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Services;
 
-namespace Web.Controllers;
+namespace AdminPanel.Controllers;
 
 [Authorize(Roles = "Admin, Manager")]
-public class ClaimController : Controller
+public class RoleController : Controller
 {
-    private readonly IGenericService<Claim> _claimService;
+    private readonly IGenericService<Role> _roleService;
 
-    public ClaimController(IGenericService<Claim> claimService)
+    public RoleController(IGenericService<Role> roleService)
     {
-        _claimService = claimService;
+        _roleService = roleService;
     }
 
     public async Task<IActionResult> Index()
     {
-        var response = await _claimService.GetAllAsync();
+        var response = await _roleService.GetAllAsync();
         if (response.Success)
             return View(response.Data);
         else
@@ -31,17 +31,17 @@ public class ClaimController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(Claim claim)
+    public async Task<IActionResult> Create(Role role)
     {
         if (ModelState.IsValid)
         {
-            var response = await _claimService.CreateAsync(claim);
+            var response = await _roleService.CreateAsync(role);
             if (response.Success)
                 return RedirectToAction(nameof(Index));
             else
                 ModelState.AddModelError(string.Empty, response.Message);
         }
-        return View(claim);
+        return View(role);
     }
 
     public async Task<IActionResult> Edit(int? id)
@@ -49,7 +49,7 @@ public class ClaimController : Controller
         if (id == null)
             return NotFound();
 
-        var response = await _claimService.GetByIdAsync(id.Value);
+        var response = await _roleService.GetByIdAsync(id.Value);
         if (response.Success)
             return View(response.Data);
         else
@@ -58,20 +58,20 @@ public class ClaimController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, Claim claim)
+    public async Task<IActionResult> Edit(int id, Role role)
     {
-        if (id != claim.Id)
+        if (id != role.Id)
             return NotFound();
 
         if (ModelState.IsValid)
         {
-            var response = await _claimService.UpdateAsync(claim);
+            var response = await _roleService.UpdateAsync(role);
             if (response.Success)
                 return RedirectToAction(nameof(Index));
             else
                 ModelState.AddModelError(string.Empty, response.Message);
         }
-        return View(claim);
+        return View(role);
     }
 
     public async Task<IActionResult> Details(int? id)
@@ -79,7 +79,7 @@ public class ClaimController : Controller
         if (id == null)
             return NotFound();
 
-        var response = await _claimService.GetByIdAsync(id.Value);
+        var response = await _roleService.GetByIdAsync(id.Value);
         if (response.Success)
             return View(response.Data);
         else
@@ -91,7 +91,7 @@ public class ClaimController : Controller
         if (id == null)
             return NotFound();
 
-        var response = await _claimService.GetByIdAsync(id.Value);
+        var response = await _roleService.GetByIdAsync(id.Value);
         if (response.Success)
             return View(response.Data);
         else
@@ -102,10 +102,10 @@ public class ClaimController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        var response = await _claimService.GetByIdAsync(id);
+        var response = await _roleService.GetByIdAsync(id);
         if (response.Success)
         {
-            var deleteResponse = await _claimService.DeleteAsync(response.Data);
+            var deleteResponse = await _roleService.DeleteAsync(response.Data);
             if (deleteResponse.Success)
                 return RedirectToAction(nameof(Index));
             else
@@ -118,4 +118,3 @@ public class ClaimController : Controller
         return View(response.Data);
     }
 }
-
